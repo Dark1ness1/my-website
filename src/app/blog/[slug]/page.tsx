@@ -1,42 +1,46 @@
-// src/app/blog/[slug]/page.tsx
-
-import { getPostData, getSortedPostsData } from '@/lib/posts';
+import { getPostData, getSortedPostsData, PostData } from '@/lib/posts';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 
-export function generateStaticParams() {
+// Updated type with both params and searchParams as Promises
+type Props = {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+export function generateStaticParams(): { slug: string }[] {
   const posts = getSortedPostsData();
   return posts.map((post) => ({
     slug: post.id,
   }));
 }
 
-// Using a more direct type definition here
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const postData = await getPostData(params.slug);
+// Updated generateMetadata with await for both params and searchParams
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const postData = await getPostData(slug);
+  
   return {
     title: postData.title,
   };
 }
 
-// Using a more direct type definition here as well
-export default async function Post({ params }: { params: { slug: string } }) {
-  const postData = await getPostData(params.slug);
-
+// Updated component with await for both params and searchParams
+export default async function Post({ params, searchParams }: Props) {
+  const { slug } = await params;
+  const resolvedSearchParams = await searchParams; // ✅ Await searchParams if you need to use them
+  
+  const postData: PostData = await getPostData(slug);
+  
   if (!postData) {
     notFound();
   }
 
   return (
-    <article className="min-h-screen bg-gray-900 p-8 text-white">
-      <div className="mx-auto max-w-2xl">
-        <h1 className="mb-4 text-4xl font-extrabold text-cyan-400">{postData.title}</h1>
-        <div className="mb-8 text-gray-400">{postData.date}</div>
-        <div
-          className="prose prose-invert max-w-none"
-          dangerouslySetInnerHTML={{ __html: postData.contentHtml }}
-        />
-      </div>
-    </article>
+    <div>
+      <h1>{postData.title}</h1>
+      <p>{postData.date}</p>
+      <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
+    </div>
   );
 }
