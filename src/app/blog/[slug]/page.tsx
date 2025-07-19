@@ -2,6 +2,7 @@
 
 import { getPostData, getSortedPostsData } from '@/lib/posts';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 
 // This function tells Next.js which slugs (IDs) to pre-render at build time
 export function generateStaticParams() {
@@ -9,6 +10,13 @@ export function generateStaticParams() {
   return posts.map((post) => ({
     slug: post.id,
   }));
+}
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const postData = await getPostData(params.slug);
+  return {
+    title: postData.title,
+  };
 }
 
 export default async function Post({ params }: { params: { slug: string } }) {
