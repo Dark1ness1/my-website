@@ -8,7 +8,7 @@ export default function Home() {
           Muhammad Talha Nasir
         </h1>
         <p className="mt-4 text-lg text-gray-300 md:text-2xl">
-          I build modern web applications.
+          ML Engineer.
         </p>
       </div>
     </main>
