@@ -11,7 +11,6 @@ type Props = {
   };
 };
 
-// This function tells Next.js which slugs (IDs) to pre-render at build time
 export function generateStaticParams() {
   const posts = getSortedPostsData();
   return posts.map((post) => ({
@@ -19,13 +18,14 @@ export function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const postData = await getPostData(params.slug);
   return {
     title: postData.title,
   };
 }
 
+// Ensure the props use the 'Props' type we defined
 export default async function Post({ params }: Props) {
   const postData = await getPostData(params.slug);
 
