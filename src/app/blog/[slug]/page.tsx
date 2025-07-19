@@ -4,13 +4,6 @@ import { getPostData, getSortedPostsData } from '@/lib/posts';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 
-// Type for the component's props
-type Props = {
-  params: {
-    slug: string;
-  };
-};
-
 export function generateStaticParams() {
   const posts = getSortedPostsData();
   return posts.map((post) => ({
@@ -18,15 +11,16 @@ export function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+// Using a more direct type definition here
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const postData = await getPostData(params.slug);
   return {
     title: postData.title,
   };
 }
 
-// Ensure the props use the 'Props' type we defined
-export default async function Post({ params }: Props) {
+// Using a more direct type definition here as well
+export default async function Post({ params }: { params: { slug: string } }) {
   const postData = await getPostData(params.slug);
 
   if (!postData) {
