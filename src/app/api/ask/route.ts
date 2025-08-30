@@ -5,24 +5,22 @@ import { HfInference } from '@huggingface/inference';
 // --- CONFIGURATION ---
 const embeddingModel = "BAAI/bge-small-en-v1.5";
 
-// --- INITIALIZE CLIENTS ---
-const apiKey = process.env.PINECONE_API_KEY;
-const indexName = process.env.PINECONE_INDEX_NAME;
-const indexHost = process.env.PINECONE_INDEX_HOST;
-const hfToken = process.env.HUGGING_FACE_ACCESS_TOKEN;
-
-if (!apiKey || !indexName || !indexHost || !hfToken) {
-  throw new Error('One or more environment variables are not set. Please check your .env.local file.');
-}
-
-const pinecone = new Pinecone({ apiKey });
-const index = pinecone.index(indexName, indexHost);
-const hf = new HfInference(hfToken);
-
-// --- SET NEXT.JS EDGE RUNTIME ---
-
 export async function POST(req: Request) {
   try {
+    // --- INITIALIZE CLIENTS (moved inside the function) ---
+    const apiKey = process.env.PINECONE_API_KEY;
+    const indexName = process.env.PINECONE_INDEX_NAME;
+    const indexHost = process.env.PINECONE_INDEX_HOST;
+    const hfToken = process.env.HUGGING_FACE_ACCESS_TOKEN;
+
+    if (!apiKey || !indexName || !indexHost || !hfToken) {
+      throw new Error('One or more environment variables are not set. Please check your .env.local file.');
+    }
+
+    const pinecone = new Pinecone({ apiKey });
+    const index = pinecone.index(indexName, indexHost);
+    const hf = new HfInference(hfToken);
+
     const { messages } = await req.json();
     const latestMessage = messages[messages.length - 1].content;
 
