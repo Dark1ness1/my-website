@@ -63,7 +63,7 @@ export default function Home() {
                 My First Blog Post
               </h3>
               <p className="text-gray-700 text-sm mb-3">
-                Welcome to my blog! Here I'll share my thoughts on web development, AI, and technology.
+                Welcome to my blog! Here I&apos;ll share my thoughts on web development, AI, and technology.
               </p>
               <span className="text-blue-600 text-sm font-medium group-hover:underline">
                 Read more →

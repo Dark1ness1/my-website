@@ -101,7 +101,7 @@ export function FloatingChatBot() {
         setMessages(prev => 
           prev.map(msg => 
             msg.id === assistantMessageId 
-              ? { ...msg, content: 'Sorry, I couldn\'t generate a response.' }
+              ? { ...msg, content: 'Sorry, I couldn&apos;t generate a response.' }
               : msg
           )
         );
@@ -192,7 +192,7 @@ export function FloatingChatBot() {
             {messages.length === 0 && (
               <div className="text-center text-gray-500 py-8">
                 <div className="text-4xl mb-2">👋</div>
-                <p className="text-sm">Hi! I'm your AI assistant.</p>
+                <p className="text-sm">Hi! I&apos;m your AI assistant.</p>
                 <p className="text-xs mt-1">Ask me about the blog posts or projects!</p>
               </div>
             )}
