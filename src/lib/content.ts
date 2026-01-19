@@ -9,8 +9,8 @@ export const translations = {
       about: "About Me",
     },
     hero: {
-      role: "Full Stack Developer | AI Enthusiast | Builder",
-      description: "I specialize in building high-performance web applications and integrating intelligent AI solutions. Currently focused on Next.js, Python, and Cloud Architecture.",
+      role: "AI Engineer | RAG",
+      description: "I specialize in Automation using AI.",
       scroll: "↓ Scroll to explore",
     },
     projects: {
@@ -25,7 +25,7 @@ export const translations = {
     },
     contact: {
       title: "Let's Work Together",
-      subtitle: "I'm currently available for freelance projects and full-time opportunities. If you have a project that needs some creative injection, get in touch.",
+      subtitle: "I'm currently available for freelance projects and Werkstudent. If you have a project that needs some creative injection, get in touch.",
       button: "Say Hello 👋",
       socials: "Socials",
       navigation: "Navigation",
@@ -40,8 +40,8 @@ export const translations = {
       about: "Über Mich",
     },
     hero: {
-      role: "Full Stack Entwickler | AI Enthusiast | Macher",
-      description: "Ich spezialisiere mich auf die Entwicklung hochleistungsfähiger Webanwendungen und die Integration intelligenter KI-Lösungen. Derzeit konzentriert auf Next.js, Python und Cloud-Architektur.",
+      role: "AI Engineer | RAG",
+      description: "Ich bin spezialisiert auf Automatisierung mit KI.",
       scroll: "↓ Scrollen zum Entdecken",
     },
     projects: {
@@ -56,7 +56,7 @@ export const translations = {
     },
     contact: {
       title: "Lass uns zusammenarbeiten",
-      subtitle: "Ich stehe derzeit für Freelance-Projekte und Vollzeitstellen zur Verfügung. Wenn Sie ein Projekt haben, das kreative Impulse benötigt, melden Sie sich.",
+      subtitle: "Ich stehe derzeit für Freelance-Projekte und Werkstudent zur Verfügung. Wenn Sie ein Projekt haben, das kreative Impulse benötigt, melden Sie sich.",
       button: "Sag Hallo 👋",
       socials: "Soziale Medien",
       navigation: "Navigation",
