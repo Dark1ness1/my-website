@@ -1,3 +1,5 @@
+// src/app/blog/[slug]/page.tsx
+
 import { getPostData, getSortedPostsData, PostData } from '@/lib/posts';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -28,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 // Updated component with await for both params and searchParams
 export default async function Post({ params, searchParams }: Props) {
   const { slug } = await params;
-  const resolvedSearchParams = await searchParams; // ✅ Await searchParams if you need to use them
+  // const resolvedSearchParams = await searchParams; // ✅ Await searchParams if you need to use them
   
   const postData: PostData = await getPostData(slug);
   
