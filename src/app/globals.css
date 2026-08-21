@@ -1,22 +1,305 @@
-/* src/app/globals.css.tsx */
+/* src/app/globals.css */
 
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ------------------------------------------------------------------ *
+ *  Design tokens
+ *  One palette for the entire site: near-black surfaces, a teal accent
+ *  and gold for secondary highlights. Change a value here and every
+ *  page follows — no page keeps its own private colour scheme.
+ * ------------------------------------------------------------------ */
+@theme {
+  /* Surfaces, from furthest back to closest to the reader */
+  --color-canvas: #08080a;
+  --color-surface: #0e0e12;
+  --color-elevated: #16161c;
+  --color-line: #23232c;
+  --color-line-soft: #191920;
+
+  /* Text */
+  --color-ink: #f4f4f6;
+  --color-muted: #a3a3ae;
+  --color-faint: #6d6d78;
+
+  /* Accents */
+  --color-accent: #2dd4bf;
+  --color-accent-soft: #5eead4;
+  --color-accent-deep: #0f766e;
+  --color-gold: #fbbf24;
+  --color-gold-deep: #92400e;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ------------------------------------------------------------------ *
+ *  Base
+ * ------------------------------------------------------------------ */
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* keep anchored headings clear of the fixed navbar */
+    scroll-padding-top: 6rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: #04211d;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-line);
+    border: 2px solid var(--color-canvas);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #34343f;
+  }
 }
 
-/* Force light theme - remove dark mode preference */
-body {
-  background: #ffffff;
-  color: #171717;
-  font-family: Arial, Helvetica, sans-serif;
+/* ------------------------------------------------------------------ *
+ *  Scroll reveal
+ *  Elements marked `data-reveal` fade up as they enter the viewport.
+ *  The `js-reveal` class is set by an inline script in <head> before
+ *  first paint, so without JavaScript everything stays plainly visible
+ *  instead of being stuck at opacity 0.
+ * ------------------------------------------------------------------ */
+.js-reveal [data-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.js-reveal [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .js-reveal [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ *  Decorative helpers
+ * ------------------------------------------------------------------ */
+
+/* Faint blueprint grid that fades out towards the bottom. */
+.grid-backdrop {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--color-line) 55%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--color-line) 55%, transparent) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+}
+
+/* Soft coloured light source. Hue is set per page via --glow. */
+.glow {
+  background: radial-gradient(
+    circle at center,
+    color-mix(in oklab, var(--glow, var(--color-accent)) 26%, transparent) 0%,
+    transparent 68%
+  );
+  filter: blur(30px);
+}
+
+/* Gradient text that stays readable at small sizes. */
+.text-gradient {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-ink) 0%,
+    var(--color-accent-soft) 55%,
+    var(--color-gold) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* 1px gradient hairline used to separate major sections. */
+.hairline {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--color-line) 20%,
+    var(--color-line) 80%,
+    transparent
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ *  Article typography
+ *  Hand-rolled because @tailwindcss/typography is not installed — the
+ *  `prose` classes this project used to reference were doing nothing.
+ * ------------------------------------------------------------------ */
+.article {
+  color: var(--color-muted);
+  font-size: 1.0625rem;
+  line-height: 1.8;
+}
+
+.article > * + * {
+  margin-top: 1.3em;
+}
+
+.article h1,
+.article h2,
+.article h3,
+.article h4 {
+  color: var(--color-ink);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  scroll-margin-top: 6rem;
+}
+
+.article h2 {
+  font-size: 1.75rem;
+  margin-top: 2.4em;
+  margin-bottom: -0.4em;
+}
+
+.article h3 {
+  font-size: 1.3125rem;
+  margin-top: 2em;
+  margin-bottom: -0.5em;
+}
+
+.article h4 {
+  font-size: 1.0625rem;
+  margin-top: 1.8em;
+  margin-bottom: -0.6em;
+}
+
+.article a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: color-mix(in oklab, var(--color-accent) 45%, transparent);
+  transition: text-decoration-color 0.2s;
+}
+.article a:hover {
+  text-decoration-color: var(--color-accent);
+}
+
+.article strong {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+.article ul,
+.article ol {
+  padding-left: 1.4rem;
+}
+.article ul {
+  list-style: disc;
+}
+.article ol {
+  list-style: decimal;
+}
+.article li + li {
+  margin-top: 0.45em;
+}
+.article li::marker {
+  color: var(--color-accent);
+}
+
+.article blockquote {
+  border-left: 3px solid var(--color-accent);
+  padding: 0.25rem 0 0.25rem 1.25rem;
+  color: var(--color-ink);
+  font-style: italic;
+}
+
+.article code {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.875em;
+  background: var(--color-elevated);
+  border: 1px solid var(--color-line);
+  border-radius: 0.375rem;
+  padding: 0.15em 0.4em;
+  color: var(--color-accent-soft);
+}
+
+.article pre {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: 0.875rem;
+  padding: 1.25rem;
+  overflow-x: auto;
+  line-height: 1.7;
+}
+.article pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--color-ink);
+  font-size: 0.875rem;
+}
+
+.article img {
+  border-radius: 1rem;
+  border: 1px solid var(--color-line);
+}
+
+.article hr {
+  border: 0;
+  border-top: 1px solid var(--color-line);
+  margin: 2.5em 0;
+}
+
+.article table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+.article th,
+.article td {
+  border: 1px solid var(--color-line);
+  padding: 0.6rem 0.85rem;
+  text-align: left;
+}
+.article th {
+  background: var(--color-elevated);
+  color: var(--color-ink);
+  font-weight: 600;
 }

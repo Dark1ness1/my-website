@@ -1,11 +1,17 @@
 ---
-title: "My First Post"
-date: "2025-07-19"
-excerpt: "This is a short summary of my first blog post. Learning Next.js is fun!"
+title: "Getting Started with my first Blog"
+date: "20-01-2026"
+excerpt: "Starting ..."
+coverImage: "/blog/post-1.jpg"
+tags: ["Introduction", "Future"]
 ---
 
-This is the main content of my blog post. I can write **bold text**, _italic text_, and even include code snippets.
+## Introduction
 
-`console.log("Hello, World!");`
+This is the actual content of the blog post. Everything above the second set of dashes (---) is invisible data.
 
-Markdown makes writing easy and structured.
+Everything below it is visible text.
+
+### Why Next.js?
+
+Next.js gives you the best developer experience with all the features you need for production: hybrid static & server rendering, TypeScript support, smart bundling, and route pre-fetching.

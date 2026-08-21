@@ -1,48 +1,52 @@
 // src/app/blog/[slug]/page.tsx
 
-import { getPostData, getSortedPostsData, PostData } from '@/lib/posts';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
+import { getAdjacentPosts, getPostData, getSortedPostsData } from '@/lib/posts';
+import { isoDate } from '@/lib/format';
+import { PostView } from './PostView';
 
-// Updated type with both params and searchParams as Promises
 type Props = {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
+// Every post is known at build time. Turning off dynamic params means an
+// unknown slug is answered straight from the 404 page instead of being
+// rendered on demand — which in Next 15.4 streams an empty shell here.
+export const dynamicParams = false;
+
 export function generateStaticParams(): { slug: string }[] {
-  const posts = getSortedPostsData();
-  return posts.map((post) => ({
-    slug: post.id,
-  }));
+  return getSortedPostsData().map((post) => ({ slug: post.id }));
 }
 
-// Updated generateMetadata with await for both params and searchParams
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const postData = await getPostData(slug);
-  
+  const post = await getPostData(slug);
+
+  if (!post) return { title: 'Post not found' };
+
   return {
-    title: postData.title,
+    title: post.title,
+    description: post.excerpt,
+    openGraph: {
+      type: 'article',
+      title: post.title,
+      description: post.excerpt,
+      publishedTime: isoDate(post.date),
+      tags: post.tags,
+      images: post.coverImage ? [post.coverImage] : undefined,
+    },
   };
 }
 
-// Updated component with await for both params and searchParams
-export default async function Post({ params, searchParams }: Props) {
+export default async function Post({ params }: Props) {
   const { slug } = await params;
-  // const resolvedSearchParams = await searchParams; // ✅ Await searchParams if you need to use them
-  
-  const postData: PostData = await getPostData(slug);
-  
-  if (!postData) {
-    notFound();
-  }
+  const post = await getPostData(slug);
 
-  return (
-    <div>
-      <h1>{postData.title}</h1>
-      <p>{postData.date}</p>
-      <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
-    </div>
-  );
+  // An unknown slug now renders the 404 page instead of throwing a 500.
+  if (!post) notFound();
+
+  const { previous, next } = getAdjacentPosts(post.id);
+
+  return <PostView post={post} previous={previous} next={next} />;
 }
